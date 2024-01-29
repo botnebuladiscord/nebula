@@ -1,0 +1,31 @@
+# from discord.app_commands import Choice
+
+# helpoptions = [
+#     Choice(name="add", value="1"),
+#     Choice(name="subtract", value="2"),
+#     Choice(name="multiply", value="3"),
+#     Choice(name="divide", value="4"),
+#     Choice(name="squareroot", value="5"),
+#     Choice(name="cuberoot", value="6"),
+#     Choice(name="circumference", value="7"),
+#     Choice(name="speed", value="8"),
+#     Choice(name="distance", value="9"),
+#     Choice(name="time", value="10"),
+#     Choice(name="tictactoe", value="11"),
+#     Choice(name="wanted", value="12"),
+#     Choice(name="prison", value="13"),
+#     Choice(name="rockpaperscissors", value="14"),
+#     Choice(name="tweet", value="15"),
+#     Choice(name="diceroll", value="16"),
+#     Choice(name="quiz", value="17"),
+#     Choice(name="quizstats", value="18"),
+#     Choice(name="quizleaderboard", value="19"),
+#     Choice(name="connect4", value="20"),
+#     Choice(name="kick", value="21"),
+#     Choice(name="ban", value="22"),
+#     Choice(name="slowmode", value="23"),
+#     Choice(name="create", value="24"),
+#     Choice(name="delete", value="25"),
+#     Choice(name="poll", value="26"),
+#     Choice(name="announce", value="27")
+#     ]
