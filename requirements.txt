@@ -1,0 +1,9 @@
+discord
+topggpy
+flask
+pyimgur
+pillow
+wikipedia-api
+matplotlib
+better_profanity
+firebase_admin
