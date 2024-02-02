@@ -156,8 +156,8 @@ while True:
 		client.run(t)
 		break
 	except:
-		time.sleep(60*5)
 		print('Fail, Trying again in 5 minute')
+		time.sleep(60*5)
 # while True:
 #   print('TRYING...')
 #   try:
