@@ -154,6 +154,7 @@ keep_alive()
 while True:
 	try:
 		client.run(t)
+		time.sleep(5)
 		break
 	except:
 		print('Fail, Trying again in 5 minute')
