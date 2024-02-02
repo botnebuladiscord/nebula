@@ -151,7 +151,13 @@ async def on_error(error, message):
 
 t = os.environ.get('TOKEN')
 keep_alive()
-client.run(t)
+while True:
+	try:
+		client.run(t)
+		break
+	except:
+		time.sleep(60*5)
+		print('Fail, Trying again in 5 minute')
 # while True:
 #   print('TRYING...')
 #   try:
