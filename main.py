@@ -151,25 +151,25 @@ async def on_error(error, message):
 
 t = os.environ.get('TOKEN')
 keep_alive()
-while True:
-	try:
-		client.run(t)
-		time.sleep(5)
-		break
-	except Exception as e:
-		print(e)
-		print('Fail, Trying again in 5 minute')
-		time.sleep(60*5)
 # while True:
-#   print('TRYING...')
-#   try:
-#     if client.is_ws_ratelimited():
-#       pass
-#     else:
-#       client.run(t)
-#       print('SUCCESS!')
-#     break
-#   except Exception as e:
-#     print(e)
-#     print('FAIL, Trying again in 5 minutes')
-#     time.sleep(60*5)
+# 	try:
+# 		client.run(t)
+# 		time.sleep(5)
+# 		break
+# 	except Exception as e:
+# 		print(e)
+# 		print('Fail, Trying again in 5 minute')
+# 		time.sleep(60*5)
+while True:
+  print('TRYING...')
+  try:
+    if client.is_ws_ratelimited():
+      pass
+    else:
+      client.run(t)
+      print('SUCCESS!')
+    break
+  except Exception as e:
+    print(e)
+    print('FAIL, Trying again in 5 minutes')
+    time.sleep(60*5)
