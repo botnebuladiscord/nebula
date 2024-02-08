@@ -124,7 +124,7 @@ class nebcoins(commands.Cog):
 
     @app_commands.command(name='plant', description='Plant a crop')
     async def plant(self, ctx, plant: str=None):
-        query = plant
+        query = plant.lower()
         await ctx.response.defer()
         bal, level, farm = getplanteddata(ctx.user.id)
         # bal = getmoney(ctx.user.id)
@@ -337,13 +337,19 @@ class nebcoins(commands.Cog):
             try:
                 ide = inv2[id-1]
             except:
-                await ctx.followup.send(f'You do not have these many items in your inventory')
+                await ctx.followup.send(f'You do not this item in your inventory')
                 return
             money = str(ide).replace(':','')
             money = mkt[plants.index(money)]
-
+            nos = 0
+            for i in inv2:
+                if i == inv2[id-1]:
+                    nos += 1
+            if quantity > nos:
+                await ctx.followup.send(f'You do not have these many items in your inventory')
+                return
             for i in range(quantity):
-                    inv.pop(inv.index(inv2[id-1]))
+                inv.pop(inv.index(inv2[id-1]))
             # Thread(target=updateinv, args=(ctx.author.id, inv)).start()
             # Thread(target=updatemoney, args=(ctx.author.id, bal + money)).start()
             embed = discord.Embed(title='Market', color=discord.Color.gold())
@@ -357,12 +363,16 @@ class nebcoins(commands.Cog):
             await ctx.response.send_message(embed=embed)
 
     @app_commands.command(name='market', description='View todays market')
-    async def market(self, ctx):
+    async def market(self, ctx, page: app_commands.Range[int, 1, 2]):
         if getmoney(str(ctx.user.id)) != None:
             embed = discord.Embed(title="Today's Market!", color = discord.Color.dark_gold())
             ii = -1
             for i in mkt:
                 ii += 1
+                if page == 1 and ii == 13:
+                    break
+                elif page == 2 and ii < 13:
+                    continue
                 pl = plants[ii]
                 if pl == 'cherry':
                     pl = 'cherries'
@@ -783,6 +793,8 @@ class nebcoins(commands.Cog):
             for i in pets:
                 if pets.index(i) < petlevels[1]:
                     continue
+                if pets.index(i) == pets.index('llama'):
+                    break
                 ii = i
                 if i == 'panda':
                     i = 'panda_face'
