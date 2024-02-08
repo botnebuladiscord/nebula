@@ -353,10 +353,8 @@ def getfarmdata(userid):
         time = data[id]['time']
         #FARM
         farm = data[id]["farm"] 
-        print(farm)
         #INV
         inv = data[id]["inv"]
-        print(inv)
         return bal, time, farm, inv
     except:
         return None, [], None, "false"
