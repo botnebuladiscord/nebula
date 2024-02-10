@@ -124,7 +124,6 @@ class nebcoins(commands.Cog):
 
     @app_commands.command(name='plant', description='Plant a crop')
     async def plant(self, ctx, plant: str=None):
-        query = plant.lower()
         await ctx.response.defer()
         bal, level, farm = getplanteddata(ctx.user.id)
         # bal = getmoney(ctx.user.id)
@@ -142,6 +141,7 @@ class nebcoins(commands.Cog):
             if ii == lvlid:
                 break
         if query != None:
+            query = plant.lower()
             if query not in plantslvl:
                 await ctx.followup.send(":no_entry_sign: Plant not found")
                 return
