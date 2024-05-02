@@ -1,146 +1,131 @@
 import json
 from datetime import timedelta, datetime
+from nebulafunctions.storage.fstorage import *
 
 def poll(mesid, time, voted, votes, et, a, q, ch, guild):
+    data = getdata_poll()
     try:
-        data = json.load(open('storage/poll.json'))
         data.pop(str(mesid))
-        with open('storage/poll.json', 'w') as file:
-            json.dump(data, file)
+        uploaddata_poll(data)
     except:
         pass
-    with open('storage/poll.json') as file:
-        ids = json.load(file)
+    ids = data
     ids[mesid] = {'time': time,'et': et, 'voted':voted, 'votes': votes, 'a':a, 'q':q, 'ch':ch, 'guild':guild}
-    with open('storage/poll.json', 'w') as file:
-        json.dump(ids, file)
+    uploaddata_poll(ids)
 
-def getv(mid):
-    try:
-        with open("storage/poll.json") as file:
-            data = json.load(file)
-            jsonData = data[mid]
-            for x in jsonData:
-                if x == 'voted':
-                    return data[mid]["voted"]    
-    except:
-        return 0 
+# def getv(mid):
+#     try:
+#         with open("storage/poll.json") as file:
+#             data = json.load(file)
+#             jsonData = data[mid]
+#             for x in jsonData:
+#                 if x == 'voted':
+#                     return data[mid]["voted"]    
+#     except:
+#         return 0 
     
-def getet(mid):
-    try:
-        with open("storage/poll.json") as file:
-            data = json.load(file)
-            jsonData = data[mid]
-            for x in jsonData:
-                if x == 'et':
-                    return data[mid]["et"]    
-    except:
-        return 0 
+# def getet(mid):
+#     try:
+#         with open("storage/poll.json") as file:
+#             data = json.load(file)
+#             jsonData = data[mid]
+#             for x in jsonData:
+#                 if x == 'et':
+#                     return data[mid]["et"]    
+#     except:
+#         return 0 
     
-def geta(mid):
-    try:
-        with open("storage/poll.json") as file:
-            data = json.load(file)
-            jsonData = data[mid]
-            for x in jsonData:
-                if x == 'a':
-                    return data[mid]["a"]    
-    except:
-        return 0  
+# def geta(mid):
+#     try:
+#         with open("storage/poll.json") as file:
+#             data = json.load(file)
+#             jsonData = data[mid]
+#             for x in jsonData:
+#                 if x == 'a':
+#                     return data[mid]["a"]    
+#     except:
+#         return 0  
     
-def getch(mid):
-    try:
-        with open("storage/poll.json") as file:
-            data = json.load(file)
-            jsonData = data[mid]
-            for x in jsonData:
-                if x == 'ch':
-                    return data[mid]["ch"]    
-    except:
-        return 0  
+# def getch(mid):
+#     try:
+#         with open("storage/poll.json") as file:
+#             data = json.load(file)
+#             jsonData = data[mid]
+#             for x in jsonData:
+#                 if x == 'ch':
+#                     return data[mid]["ch"]    
+#     except:
+#         return 0  
     
-def getq(mid):
-    try:
-        with open("storage/poll.json") as file:
-            data = json.load(file)
-            jsonData = data[mid]
-            for x in jsonData:
-                if x == 'q':
-                    return data[mid]["q"]    
-    except:
-        return 0       
+# def getq(mid):
+#     try:
+#         with open("storage/poll.json") as file:
+#             data = json.load(file)
+#             jsonData = data[mid]
+#             for x in jsonData:
+#                 if x == 'q':
+#                     return data[mid]["q"]    
+#     except:
+#         return 0       
 
-def gett(mid):
-    try:
-        with open("storage/poll.json") as file:
-            data = json.load(file)
-            jsonData = data[mid]
-            for x in jsonData:
-                if x == 'time':
-                    return data[mid]["time"]    
-    except:
-        return 0       
+# def gett(mid):
+#     try:
+#         with open("storage/poll.json") as file:
+#             data = json.load(file)
+#             jsonData = data[mid]
+#             for x in jsonData:
+#                 if x == 'time':
+#                     return data[mid]["time"]    
+#     except:
+#         return 0       
 
-def getvn(mid):
-    try:
-        with open("storage/poll.json") as file:
-            data = json.load(file)
-            jsonData = data[mid]
-            for x in jsonData:
-                if x == 'votes':
-                    return data[mid]["votes"]    
-    except:
-        return 0
+# def getvn(mid):
+#     try:
+#         with open("storage/poll.json") as file:
+#             data = json.load(file)
+#             jsonData = data[mid]
+#             for x in jsonData:
+#                 if x == 'votes':
+#                     return data[mid]["votes"]    
+#     except:
+#         return 0
     
-def getguild(mid):
-    try:
-        with open("storage/poll.json") as file:
-            data = json.load(file)
-            jsonData = data[mid]
-            for x in jsonData:
-                if x == 'guild':
-                    return data[mid]["guild"]    
-    except:
-        return 0
+# def getguild(mid):
+#     try:
+#         with open("storage/poll.json") as file:
+#             data = json.load(file)
+#             jsonData = data[mid]
+#             for x in jsonData:
+#                 if x == 'guild':
+#                     return data[mid]["guild"]    
+#     except:
+#         return 0
     
-def pollupdatevoted(mid, voted):
+def pollupdatevotedvotes(mid, voted, votes):
     try:
-        with open("storage/poll.json") as file:
-            data = json.load(file)
+        data = getdata_poll()
         data[mid]["voted"] = voted
-        with open("storage/poll.json", "w") as file:
-            json.dump(data, file)
-    except:
-        pass
-    
-def pollupdatevotes(mid, votes):
-    try:
-        with open("storage/poll.json") as file:
-            data = json.load(file)
         data[mid]["votes"] = votes
-        with open("storage/poll.json", "w") as file:
-            json.dump(data, file)
+        uploaddata_poll(data)
     except:
         pass
 
 def setcomplete(mid):
     try:
-        with open("storage/poll.json") as file:
-            data = json.load(file)
+        data = getdata_poll()
         data.pop(str(mid))
         data[mid] = 'OVER'
-        with open("storage/poll.json", "w") as file:
-            json.dump(data, file)
+        uploaddata_poll(data)
     except:
         pass
     
-def checkcomplete(mid):
-    try:
-        with open("storage/poll.json") as file:
-            data = json.load(file)
-        return data[str(mid)] == 'OVER'
-    except:
-        return False
+# def checkcomplete(mid):
+#     try:
+#         with open("storage/poll.json") as file:
+#             data = json.load(file)
+#         return data[str(mid)] == 'OVER'
+#     except:
+#         return False
     
 def convert_time(time):
     pos = ['s', 'm', 'h', 'd']
