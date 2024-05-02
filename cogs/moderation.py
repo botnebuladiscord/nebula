@@ -1,59 +1,60 @@
 import discord
-from datetime import timedelta, datetime
+from datetime import timedelta, datetime, timezone
 from discord import app_commands
 from random import choice
 from discord.ext import commands, tasks
 from nebulafunctions.moderation.fmoderation import *
+from nebulafunctions.storage.fstorage import *
+
 
 @tasks.loop(seconds=1)
 async def pollloop(bot):
     try:
-        data = json.load(open('storage/poll.json'))
+        data = getdata_poll()
         for i in data.keys():
             try:
-                et = getet(i)
+                et = data[i]['et']
                 if et == None:
                     continue
-                a = datetime.fromtimestamp(int(et)).strftime('%Y-%m-%d %H:%M:%S')
-                if a <= datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S'):
-                    c = getch(i)
+                a = datetime.fromtimestamp(int(et), timezone.utc).strftime('%Y-%m-%d %H:%M:%S')
+                if a <= datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S'):
+                    c = data[i]['ch']
                     c = await bot.fetch_channel(c)
                     m = await c.fetch_message(i)
                     a = 0
                     b = ''
                     ii = 0
-                    num = getvn(str(m.id))
+                    num = data[i]['votes']
                     key = list(num.keys())
-                    e = getvn(str(m.id))
-                    for i in e:
+                    e = data[i]['votes']
+                    for j in e:
                         ii += 1
-                        if num[str(i)] != 0:
-                            if num[str(i)] > a:
-                                a = num[str(i)]
+                        if num[str(j)] != 0:
+                            if num[str(j)] > a:
+                                a = num[str(j)]
                                 b = key[ii-1]
-                            elif num[str(i)] == a:
-                                a = str(a) + ', ' + str(num[str(i)])
+                            elif num[str(j)] == a:
+                                a = str(a) + ', ' + str(num[str(j)])
                                 b = str(b) + ', ' + str(key[ii-1])
-                    user = geta(str(m.id))
-                    guild = getguild(str(m.id))
+                    user = data[i]['a']
+                    guild = data[i]['guild']
                     guild = bot.get_guild(guild)
                     user = await guild.fetch_member(user)
+                    question = data[i]['q']
                     if a == 0:
-                        embed = discord.Embed(description=f'{getq(str(m.id))}\n\n**Result:** Nobody Voted\n\n🔒 Voting has been locked', color=discord.Color.red())
+                        embed = discord.Embed(description=f'{question}\n\n**Result:** Nobody Voted\n\n🔒 Voting has been locked', color=discord.Color.red())
                         name = user.nick
                         if name == None:
                             name = user.name
                         embed.set_author(name=name, icon_url=user.avatar.url)
                         await m.edit(embed=embed)
                     else:
-                        embed = discord.Embed(description=f'{getq(str(m.id))}\n\n**Result:** {str(b)} won with {str(a)} vote(s)\n\n🔒 Voting has been locked', color=discord.Color.green())
+                        embed = discord.Embed(description=f'{question}\n\n**Result:** {str(b)} won with {str(a)} vote(s)\n\n🔒 Voting has been locked', color=discord.Color.green())
                         name = user.nick
                         if name == None:
                             name = user.name
                         embed.set_author(name=name, icon_url=user.avatar.url)
                         await m.edit(embed=embed)
-                    # aaa = getvn(str(m.id))
-                    # poll(m.id, gett(str(m.id)), ['OVER'], aaa, 'OVER', geta(str(m.id)), getq(str(m.id)), getch(str(m.id)))
                     setcomplete(m.id)
             except:
                 pass
@@ -67,7 +68,7 @@ async def giveawayloop(bot):
     for i in data.keys():
         try:
             a = datetime.fromtimestamp(int(getgtime(i))).strftime('%Y-%m-%d %H:%M:%S')
-            if a <= datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S'):
+            if a <= datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S'):
                 mes = i
                 prize = getgprize(i)
                 guild = await bot.fetch_guild(getgguild(i))
@@ -116,7 +117,7 @@ async def tempbanloop(bot):
     for i in data.keys():
         time = checktempban(i)
         now = datetime.fromtimestamp(int(time)).strftime('%Y-%m-%d %H:%M:%S')
-        if now <= datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S'):
+        if now <= datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S'):
             guild = gettempbanguild(str(i))
             guild = await bot.fetch_guild(guild)
             user = await bot.fetch_user(int(i))
@@ -133,16 +134,17 @@ class moderation(commands.Cog):
         
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload):
+        data = getdata_poll()
         member = payload.member
         mid = payload.message_id
         channel_id = payload.channel_id
-        if checkcomplete(str(mid)):
+        if data[str(mid)] == 'OVER':
             channel = self.bot.get_channel(channel_id)
             message = await channel.fetch_message(payload.message_id)
             await message.remove_reaction(payload.emoji, member)
             self.removed.append((member.id, payload.guild_id))
             return
-        a = getv(str(mid))
+        a = data[str(mid)]['voted']
         if a == 0:
             return
         if member.id in a:
@@ -152,15 +154,15 @@ class moderation(commands.Cog):
             self.removed.append((member.id, payload.guild_id))
         else:
             a.append(member.id)
-            votes = getvn(str(mid))
+            votes = data[str(mid)]['votes']
             for i in votes.keys():
                 if str(i) == str(payload.emoji):
                     votes[str(i)] += 1
-            pollupdatevoted(str(mid), a)
-            pollupdatevotes(str(mid), votes)
+            pollupdatevotedvotes(str(mid), a, votes)
             
     @commands.Cog.listener()
     async def on_raw_reaction_remove(self, payload):
+        data = getdata_poll()
         member = await self.bot.fetch_user(payload.user_id)
         mid = payload.message_id
         removedcheckii = 0
@@ -170,19 +172,18 @@ class moderation(commands.Cog):
                 return
             removedcheckii += 1
         # channel_id = payload.channel_id
-        if checkcomplete(str(mid)):
+        if data[str(mid)] == 'OVER':
             return
-        a = getv(str(mid))
+        a = data[str(mid)]['voted']
         if a == 0:
             return
         if member.id in a:
             a.pop(a.index(member.id))
-            votes = getvn(str(mid))
+            votes = data[str(mid)]['votes']
             for i in votes.keys():
                 if str(i) == str(payload.emoji):
                     votes[str(i)] -= 1
-            pollupdatevoted(str(mid), a)
-            pollupdatevotes(str(mid), votes)
+            pollupdatevotedvotes(str(mid), a, votes)
         
     @app_commands.command(name='kick', description='Kick a user')
     async def kick(self, ctx, user: discord.Member, reason: str=None):
@@ -280,13 +281,13 @@ class moderation(commands.Cog):
         
         time = convert_time(time)
         time2 = timedelta(0, time)
-        time2 = datetime.utcnow() + time2
+        time2 = datetime.now(timezone.utc) + time2
         day = time2.strftime('%d')
         year = time2.strftime('%Y')
         month = time2.strftime('%m')
         hour = time2.strftime('%H')
         minute = time2.strftime('%M')
-        epoch_time = datetime(int(year), int(month), int(day), int(hour), int(minute)).timestamp() 
+        epoch_time = datetime(int(year), int(month), int(day), int(hour), int(minute), 0, 0, timezone.utc).timestamp() 
 
         epoch_time = round(epoch_time)
         th = f'<t:{epoch_time}:R>'
@@ -430,7 +431,7 @@ class moderation(commands.Cog):
                 return
         time = convert_time(time)
         time2 = timedelta(0, time)
-        time2 = datetime.utcnow() + time2
+        time2 = datetime.now(timezone.utc) + time2
         day = time2.strftime('%d')
         year = time2.strftime('%Y')
         month = time2.strftime('%m')
