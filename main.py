@@ -11,6 +11,7 @@ from discord.ext import commands, tasks
 from nebulafunctions.main.fmain import *
 from discord import app_commands
 from discord.ui import Button, View
+from nebulafunctions.storage.fstorage import *
 
 class Nebula(commands.Bot):
         def __init__(self):
@@ -32,13 +33,13 @@ class Nebula(commands.Bot):
           await client.tree.sync() #leave empty for all servers
 
         async def on_ready(self):
-	        self.synced = True
-	        global topggv
-	        dbl_token = os.getenv('TOPGG')
-	        topggv = topgg.DBLClient(client, dbl_token)
-	        change_status.start()
-	        update_stats.start()
-	        print('Ready')
+            self.synced = True
+            global topggv
+            dbl_token = os.getenv('TOPGG')
+            topggv = topgg.DBLClient(client, dbl_token)
+            change_status.start()
+            update_stats.start()
+            print('Ready')
         
 client = Nebula()
 
@@ -106,39 +107,42 @@ async def on_interaction(ctx):
       await ctx.response.send_message(embed=embed)
 
 async def on_tree_error(interaction: discord.Interaction, error: app_commands.AppCommandError):
-	embed = discord.Embed(title='An error occurred', description='Do you want to report this error?', color=discord.Color.red())
-	view = View()
-	yes = Button(label='Report Error', style=discord.ButtonStyle.red, custom_id='errorreportyes')
-	no = Button(label='Ignore', style=discord.ButtonStyle.blurple, custom_id='errorreportno')
-	view.add_item(yes)
-	view.add_item(no)
-	await interaction.response.send_message(embed=embed, view=view)
-	try:
-		def check(payload):
-			return payload.user.id == interaction.user.id
-		interact = await client.wait_for('interaction', check=check, timeout=60)
-		await interact.response.defer()
-		yes.disabled = True
-		no.disabled = True
+    embed = discord.Embed(title='An error occurred', description='Do you want to report this error?', color=discord.Color.red())
+    view = View()
+    yes = Button(label='Report Error', style=discord.ButtonStyle.red, custom_id='errorreportyes')
+    no = Button(label='Ignore', style=discord.ButtonStyle.blurple, custom_id='errorreportno')
+    view.add_item(yes)
+    view.add_item(no)
+    try:
+        await interaction.response.send_message(embed=embed, view=view)
+    except:
+        await interaction.followup.send(embed=embed, view=view)
+    try:
+        def check(payload):
+            return payload.user.id == interaction.user.id
+        interact = await client.wait_for('interaction', check=check, timeout=60)
+        await interact.response.defer()
+        yes.disabled = True
+        no.disabled = True
 
-		if interact.data['custom_id'] == 'errorreportyes':
-			embed = discord.Embed(title='Error', description='```Reported```', color=discord.Color.purple())
-			await interaction.edit_original_response(embed=embed, view=view)
-			channel = client.get_channel(956417591176495164)
-			embed = discord.Embed(title='Error Report', color=discord.Color.red())
-			embed.add_field(name='Command', value=f'```{error.command.name} {error.command.parameters}```', inline=False)
-			embed.add_field(name='Error', value=f'```{str(error.original)}```', inline=False)
-			embed.add_field(name='Args', value=f'```{str(error.args)}```', inline=False)
-			await channel.send(embed=embed)
-		else:
-			embed = discord.Embed(title='Error', description='```Ignored```', color=discord.Color.purple())
-			await interaction.edit_original_response(embed=embed, view=view)
+        if interact.data['custom_id'] == 'errorreportyes':
+            embed = discord.Embed(title='Error', description='```Reported```', color=discord.Color.purple())
+            await interaction.edit_original_response(embed=embed, view=view)
+            channel = client.get_channel(956417591176495164)
+            embed = discord.Embed(title='Error Report', color=discord.Color.red())
+            embed.add_field(name='Command', value=f'```{error.command.name} {error.command.parameters}```', inline=False)
+            embed.add_field(name='Error', value=f'```{str(error.original)}```', inline=False)
+            embed.add_field(name='Args', value=f'```{str(error.args)}```', inline=False)
+            await channel.send(embed=embed)
+        else:
+            embed = discord.Embed(title='Error', description='```Ignored```', color=discord.Color.purple())
+            await interaction.edit_original_response(embed=embed, view=view)
 
-	except asyncio.TimeoutError:
-	  yes.disabled = True
-	  no.disabled = True
-	  embed = discord.Embed(title='Error', description='```Ignored```', color=discord.Color.red())
-	  await interaction.edit_original_response(embed=embed, view=view)
+    except asyncio.TimeoutError:
+      yes.disabled = True
+      no.disabled = True
+      embed = discord.Embed(title='Error', description='```Ignored```', color=discord.Color.red())
+      await interaction.edit_original_response(embed=embed, view=view)
 
 
 
@@ -151,25 +155,26 @@ async def on_error(error, message):
 
 t = os.environ.get('TOKEN')
 keep_alive()
-# while True:
-# 	try:
-# 		client.run(t)
-# 		time.sleep(5)
-# 		break
-# 	except Exception as e:
-# 		print(e)
-# 		print('Fail, Trying again in 5 minute')
-# 		time.sleep(60*5)
+init_storage()
 while True:
-  print('TRYING...')
-  try:
-    if client.is_ws_ratelimited():
-      pass
-    else:
-      client.run(t)
-      print('SUCCESS!')
-    break
-  except Exception as e:
-    print(e)
-    print('FAIL, Trying again in 5 minutes')
-    time.sleep(60*5)
+    try:
+        client.run(t)
+        print('Success')
+        break
+    except Exception as e:
+        print(e)
+        print('Fail, Trying again in 5 minute')
+        time.sleep(60*5)
+# while True:
+#   print('TRYING...')
+#   try:
+#     if client.is_ws_ratelimited():
+#       pass
+#     else:
+#       client.run(t)
+#       print('SUCCESS!')
+#     break
+#   except Exception as e:
+#     print(e)
+#     print('FAIL, Trying again in 5 minutes')
+#     time.sleep(60*5)
