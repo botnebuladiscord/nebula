@@ -157,18 +157,18 @@ t = os.environ.get('TOKEN')
 keep_alive()
 init_storage()
 while True:
-    print('TRYING...')
-  try:
-    if client.is_ws_ratelimited():
-      pass
-    else:
-      client.run(t)
-      print('SUCCESS!')
-    break
-  except Exception as e:
-    print(e)
-    print('FAIL, Trying again in 5 minutes')
-    time.sleep(60*5)
+        print('TRYING...')
+        try:
+            if client.is_ws_ratelimited():
+              pass
+            else:
+              client.run(t)
+              print('SUCCESS!')
+              break
+        except Exception as e:
+            print(e)
+            print('FAIL, Trying again in 5 minutes')
+            time.sleep(60*5)
 # while True:
 #   print('TRYING...')
 #   try:
