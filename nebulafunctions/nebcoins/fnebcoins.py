@@ -1,65 +1,4 @@
-from threading import Thread
-import firebase_admin
-from firebase_admin import credentials, db
-# from firebase_admin import credentials, initialize_app, storage
-
-storagepassword = ''
-
-def init_storage():
-    cred = credentials.Certificate("storage/nebcoinstorageSecret.json")
-    firebase_admin.initialize_app(cred, {'databaseURL':'https://nebcoinstorage-default-rtdb.firebaseio.com'})
-    global ref
-    ref = db.reference("/")
-    # global storage
-    # # cred = credentials.Certificate("static/auth-firebase.json")
-    # # initialize_app(cred, {'storageBucket': 'storied-scarab-353711.appspot.com'})
-    # # global bucket
-    # # bucket = storage.bucket()
-    # storage = os.getenv('STORAGE')
-
-def uploaddata(data):
-    # blob = bucket.blob('data')
-    # blob.upload_from_string(f'{data}')
-    # data = {'data': json.dumps(data)}
-    # requests.post(f'https://nebstore.onrender.com/{storage}/upload', data=data)
-    for i in data.keys():
-        time = []
-        for t in data[i]['time']:
-            if t == None:
-                time.append('None')
-            else:
-                time.append(t)
-        data[i]['time'] = time
-        for j in data[i].keys():
-            if data[i][j] == []:
-                data[i][j] = ['empty']
-    Thread(target=ref.set, args=(data,)).start()
-
-def getdata():
-    # blob = bucket.blob('data.json')
-    # # print(dir(blob))
-    # # print(blob.open().read())
-    # # print()
-    # my_json = str(blob.download_as_text().decode('utf8')).replace("'", '"').replace("None", "null")
-    # print(my_json)
-    # return json.loads(my_json)
-    # data = requests.get(f'https://nebstore.onrender.com/{storage}/get').text
-    # data = json.loads(data)
-    # return data
-    data = ref.get()
-    for i in data.keys():
-        time = []
-        for t in data[i]['time']:
-            if t == 'None':
-                time.append(None)
-            else:
-                time.append(t)
-        data[i]['time'] = time
-        for j in data[i].keys():
-            if data[i][j] == ['empty']:
-                data[i][j] = []
-    return data
-            
+from nebulafunctions.storage.fstorage import *
 
 def startf(id):
     try:
@@ -446,8 +385,6 @@ def updateleveldata(userid, farm, level, time):
 #     data["811893594716766210"]["time"] = [None,None,None]
 #     print(data)
 #     uploaddata(data)
-
-init_storage()
 # print(gettime('811893594716766210'))
 # updatetime('811893594716766210', 0, '2023-09-22 09:52:53.887006')
 # updatetime('811893594716766210', 1, '2023-09-22 09:52:53.887006')
