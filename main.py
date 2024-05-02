@@ -166,7 +166,7 @@ while True:
               print('SUCCESS!')
               break
         except Exception as e:
-            print(e)
+            print(e, flush=True)
             print('FAIL, Trying again in 5 minutes')
             time.sleep(60*5)
 # while True:
