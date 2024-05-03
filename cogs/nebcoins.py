@@ -7,6 +7,7 @@ from discord.ui import View, Button
 from random import choice
 from nebulafunctions.nebcoins.fnebcoins import *
 from nebulafunctions.cooldowns.fcooldowns import *
+from nebulafunctions.storage.fstorage import *
 
 @tasks.loop(seconds=86400)
 async def mktprice():
@@ -135,6 +136,7 @@ class nebcoins(commands.Cog):
         lvlid = lvl[templevel]+1
         plantslvl = []
         ii = 0
+        query = plant
         for i in plants:
             ii+=1
             plantslvl.append(i)
