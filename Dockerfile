@@ -2,9 +2,9 @@ FROM python:latest
 
 LABEL Maintainer="botnebula"
 
-WORKDIR /
+WORKDIR /nebula_app
 
-COPY main.py ./
+COPY . /
 
 RUN pip install -r requirements.txt
 
