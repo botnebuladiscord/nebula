@@ -2,6 +2,8 @@ FROM python:latest
 
 LABEL Maintainer="botnebula"
 
+WORKDIR /
+
 RUN pip install -r requirements.txt
 
 #CMD instruction should be used to run the software
