@@ -41,7 +41,7 @@ class Nebula(commands.Bot):
             dbl_token = os.getenv('TOPGG')
             topggv = topgg.DBLClient(client, dbl_token)
             change_status.start()
-            update_stats.start()
+            # update_stats.start()
             print('Ready')
         
 client = Nebula()
