@@ -12,9 +12,6 @@ from nebulafunctions.main.fmain import *
 from discord import app_commands
 from discord.ui import Button, View
 from nebulafunctions.storage.fstorage import *
-from dotenv import load_dotenv
-
-load_dotenv()
 
 class Nebula(commands.Bot):
         def __init__(self):
