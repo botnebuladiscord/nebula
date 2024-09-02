@@ -6,7 +6,6 @@ app = Flask('')
 
 @app.route('/')
 def home():
-    print('Keepalive')
     return "Hello. I am alive!"
 
 @app.route('/data')

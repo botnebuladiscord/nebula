@@ -235,7 +235,7 @@ def addwarn(userid, reason, modid, guildid):
         hexuserid = str(hexuserid).replace('0x', '')
         if guildid not in data.keys():
             data[guildid] = {}
-        if userid in data[guildid].keys():
+        if userid in data[guildid].keys() and data[guildid][userid] != []:
             num = int(data[guildid][userid][-1]['id'][-1]) + 1
             warnid = hexuserid + 'm' + str(modid) + str(num)
             data[guildid][userid].append({'reason':reason, 'id':warnid})
@@ -246,7 +246,8 @@ def addwarn(userid, reason, modid, guildid):
         with open('storage/warnings.json','w') as file:
             json.dump(data, file)
         return num, warnid
-    except:
+    except Exception as e:
+        print(e)
         return None
     
 def getwarns(userid, guildid):
