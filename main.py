@@ -23,14 +23,14 @@ class Nebula(commands.Bot):
             self.synced = False
 
         async def setup_hook(self):
-          await self.load_extension('cogs.help')
-          await self.load_extension('cogs.math')
-          await self.load_extension('cogs.fun')
-          await self.load_extension('cogs.moderation')
-          await self.load_extension('cogs.information')
-          await self.load_extension('cogs.nebcoins')
-          # await self.load_extension('cogs.test')
-          await client.tree.sync() #leave empty for all servers
+            await self.load_extension('cogs.help')
+            await self.load_extension('cogs.math')
+            await self.load_extension('cogs.fun')
+            await self.load_extension('cogs.moderation')
+            await self.load_extension('cogs.information')
+            await self.load_extension('cogs.nebcoins')
+            # await self.load_extension('cogs.test')
+            await client.tree.sync() #leave empty for all servers
 
         async def on_ready(self):
             self.synced = True
@@ -57,54 +57,54 @@ async def update_stats():
         print(f"Fail [top.gg]")
 
     try:
-      url = 'https://discordbots.gg/api/servers'
+        url = 'https://discordbots.gg/api/servers'
 
-      data = {'count':len(client.guilds), 'client_id':'953533453100527626'}
-      headers={'authorization':f'Bearer {os.getenv("DBOTS")}'}
+        data = {'count':len(client.guilds), 'client_id':'953533453100527626'}
+        headers={'authorization':f'Bearer {os.getenv("DBOTS")}'}
 
-      print(f'{requests.post(url, data, headers=headers).json()} [discordbots.gg]')
+        print(f'{requests.post(url, data, headers=headers).json()} [discordbots.gg]')
     except:
-      print('Fail [discordbots.gg]')
+        print('Fail [discordbots.gg]')
 
     try:
-      url = 'https://discordbotlist.com/api/v1/bots/953533453100527626/stats'
+        url = 'https://discordbotlist.com/api/v1/bots/953533453100527626/stats'
 
-      data = {'guilds':len(client.guilds), 'users':sum(guild.member_count for guild in client.guilds)}
-      headers={'Authorization':str(os.getenv("DBOTLIST"))}
+        data = {'guilds':len(client.guilds), 'users':sum(guild.member_count for guild in client.guilds)}
+        headers={'Authorization':str(os.getenv("DBOTLIST"))}
 
-      print(f'{requests.post(url, data=data, headers=headers).text} [discordbotlist.com (stats)]')
+        print(f'{requests.post(url, data=data, headers=headers).text} [discordbotlist.com (stats)]')
     except:
-      print('Fail [discordbotlist.com (stats)]')
+        print('Fail [discordbotlist.com (stats)]')
 
     try:
-      cmds = await client.tree.fetch_commands()
-      cmdlist = []
-      for i in cmds:
-        if i.options != []:
-          options = []
-          for j in i.options:
-            if j.description != '…':
-              options.append({"name":j.name, "description":j.description, "type":j.type.value, "required":j.required})
-            else:
-              options.append({"name":j.name, "type":j.type.value, "required":j.required})
-          cmdlist.append({"name":i.name, "description":i.description, "type":i.type.value, "options":options})
-        else:  
-          cmdlist.append({"name":i.name, "description":i.description, "type":i.type.value})
-  
-      url = 'https://discordbotlist.com/api/v1/bots/953533453100527626/commands'
-      headers={'Authorization':str(os.getenv("DBOTLIST"))}
-  
-      print(f'{requests.post(url, json=cmdlist, headers=headers).text} [discordbotlist.com (commands)]')
+        cmds = await client.tree.fetch_commands()
+        cmdlist = []
+        for i in cmds:
+            if i.options != []:
+                options = []
+                for j in i.options:
+                    if j.description != '…':
+                        options.append({"name":j.name, "description":j.description, "type":j.type.value, "required":j.required})
+                    else:
+                        options.append({"name":j.name, "type":j.type.value, "required":j.required})
+                    cmdlist.append({"name":i.name, "description":i.description, "type":i.type.value, "options":options})
+            else:  
+                cmdlist.append({"name":i.name, "description":i.description, "type":i.type.value})
+
+        url = 'https://discordbotlist.com/api/v1/bots/953533453100527626/commands'
+        headers={'Authorization':str(os.getenv("DBOTLIST"))}
+
+        print(f'{requests.post(url, json=cmdlist, headers=headers).text} [discordbotlist.com (commands)]')
     except Exception as e:
-      print(e)
-      print('Fail [discordbotlist.com (commands)]')
+        print(e)
+        print('Fail [discordbotlist.com (commands)]')
 
 @client.event
 async def on_interaction(ctx):
   if ctx.type == discord.InteractionType.application_command:
     if isblacklist(ctx.user.id) != None:
-      embed = discord.Embed(title='Fail', description=f'You were blacklisted for reason: **{isblacklist(ctx.user.id)}**', color=discord.Color.red())
-      await ctx.response.send_message(embed=embed)
+        embed = discord.Embed(title='Fail', description=f'You were blacklisted for reason: **{isblacklist(ctx.user.id)}**', color=discord.Color.red())
+        await ctx.response.send_message(embed=embed)
 
 async def on_tree_error(interaction: discord.Interaction, error: app_commands.AppCommandError):
     embed = discord.Embed(title='An error occurred', description='Do you want to report this error?', color=discord.Color.red())
@@ -139,10 +139,10 @@ async def on_tree_error(interaction: discord.Interaction, error: app_commands.Ap
             await interaction.edit_original_response(embed=embed, view=view)
 
     except asyncio.TimeoutError:
-      yes.disabled = True
-      no.disabled = True
-      embed = discord.Embed(title='Error', description='```Ignored```', color=discord.Color.red())
-      await interaction.edit_original_response(embed=embed, view=view)
+        yes.disabled = True
+        no.disabled = True
+        embed = discord.Embed(title='Error', description='```Ignored```', color=discord.Color.red())
+        await interaction.edit_original_response(embed=embed, view=view)
 
 
 
@@ -160,11 +160,11 @@ while True:
         print('TRYING...')
         try:
             if client.is_ws_ratelimited():
-              pass
+                pass
             else:
-              client.run(t)
-              print('SUCCESS!')
-              break
+                client.run(t)
+                print('SUCCESS!')
+                break
         except Exception as e:
             print(e, flush=True)
             print('FAIL, Trying again in 5 minutes')
