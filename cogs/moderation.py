@@ -210,8 +210,11 @@ class moderation(commands.Cog):
         if ctx.user.guild_permissions.ban_members != True:
             await ctx.response.send_message('You need the permission: **Ban Members** to use this command', ephemeral=True)
             return
-        embed = discord.Embed(title='Banned', description=f'**Server:** {ctx.guild}\n**Moderator:** `{ctx.user.name}`\n**Reason:** {reason}', color=discord.Color.red())
-        await user.send(embed=embed)
+        try:
+            embed = discord.Embed(title='Banned', description=f'**Server:** {ctx.guild}\n**Moderator:** `{ctx.user.name}`\n**Reason:** {reason}', color=discord.Color.red())
+            await user.send(embed=embed)
+        except:
+            pass
         if delete_messages.value != '0':
             if delete_messages.value == '3d':
                 await user.ban(reason=reason, delete_message_days=3)
