@@ -1,0 +1,6 @@
+import json
+data = "{'811893594716766210': {'farm': [':apple::apple::apple::apple:', ':brown_square::brown_square::brown_square::brown_square:', ':banana::banana::banana::banana:'], 'time': [None, None, '2023-10-12 13:36:36.680488'], 'bal': 1356, 'inv': [':apple:', ':brown_square:', ':brown_square:', ':apple:', ':apple:', ':apple:', ':apple:', ':apple:'], 'pets': [], 'level': 2, 'quests': ['Plant Kiwi', 'Reach 2000 <:nebcoin:936570857684336640>']}, '865535420825600031': {'farm': [':apple::apple::apple::apple:', ':apple::apple::apple::apple:', ':apple::apple::apple::apple:'], 'time': ['2022-09-21 15:08:08.043460', '2022-09-21 15:08:47.946120', '2022-09-21 15:08:52.137617'], 'bal': 100, 'inv': [], 'pets': [], 'level': 1, 'quests': ['Plant Kiwi', 'Reach 2000 <:nebcoin:936570857684336640>']}, '870612783614558219': {'farm': [':apple::apple::apple::apple:', ':apple::apple::apple::apple:', ':apple::apple::apple::apple:'], 'time': [None, '2022-09-07 12:09:43.534611', '2022-09-07 12:10:18.070009'], 'bal': 1487, 'inv': [], 'pets': [], 'level': 1, 'quests': ['Plant Kiwi', 'Reach 2000 <:nebcoin:936570857684336640>']}}"
+print(data)
+data = data.replace("'", '"')
+data = data.replace('None', 'null')
+data = json.loads(data)
