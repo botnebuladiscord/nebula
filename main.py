@@ -5,7 +5,6 @@ import topgg
 import requests
 import asyncio
 from keepalive import keep_alive
-from threading import Thread
 from random import choice
 from discord.ext import commands, tasks
 from nebulafunctions.main.fmain import *
@@ -170,16 +169,3 @@ while True:
             print(e, flush=True)
             print('FAIL, Trying again in 5 minutes')
             time.sleep(60*5)
-# while True:
-#   print('TRYING...')
-#   try:
-#     if client.is_ws_ratelimited():
-#       pass
-#     else:
-#       client.run(t)
-#       print('SUCCESS!')
-#     break
-#   except Exception as e:
-#     print(e)
-#     print('FAIL, Trying again in 5 minutes')
-#     time.sleep(60*5)
