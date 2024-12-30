@@ -38,7 +38,8 @@ class Nebula(commands.Bot):
             dbl_token = os.getenv('TOPGG')
             topggv = topgg.DBLClient(client, dbl_token)
             change_status.start()
-            # update_stats.start()
+            if int(client.application.id) == 953533453100527626:
+                update_stats.start()
             print('Ready')
         
 client = Nebula()
