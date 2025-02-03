@@ -13,3 +13,5 @@ A discord bot developed by ISROisTHEbest.
 - [Top.gg](<https://top.gg/bot/953533453100527626>)
 - [Support Server]( https://discord.gg/CxtY6rTnr4 ) or <https://dsc.gg/botnebulasupport>
 - [App Directory]( https://discord.com/application-directory/953533453100527626 )
+
+*All code is the intellectual property of ISROisTHEbest*
