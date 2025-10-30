@@ -36,17 +36,12 @@ class Nebula(commands.Bot):
             global topggv
             dbl_token = os.getenv('TOPGG')
             topggv = topgg.DBLClient(client, dbl_token)
-            change_status.start()
+            await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name='/help | bot-nebula.web.app'))
             if int(client.application.id) == 953533453100527626:
                 update_stats.start()
             print('Ready')
         
 client = Nebula()
-
-status = ['the server', '/help']
-@tasks.loop(seconds=10)
-async def change_status():
-    await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=choice(status)))
 
 @tasks.loop(minutes=30)
 async def update_stats():
