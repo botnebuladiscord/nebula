@@ -1,5 +1,5 @@
 # Nebula, The All in One discord Bot
-A discord bot developed by ISROisTHEbest.
+A discord bot developed by ISROisTHEbest
 
 ## Includes
 - 📏 Math Commands
